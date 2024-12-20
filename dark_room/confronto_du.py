@@ -1,5 +1,5 @@
 # To run the script, enter the following in the terminal: runs, base_path, detector number, du number, and the x-axis range for histograms.
-# Example: python3 comparison_du.py --runs "699,705,707,709" --base_path "/home/mariarita/root" --detector 192 --du "D0DU107CT" --xrange "650,690"
+# Example: python3 comparison_du.py --runs "0699,0705,0707,0709" --base_path "/home/mariarita/root" --detector 192 --du "D0DU107CT" --xrange "650,690"
 
 from ROOT import TFile, TH1D, TF1, TCanvas, TGraphErrors, TMultiGraph, gStyle, gApplication
 import pandas as pd
