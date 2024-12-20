@@ -1,7 +1,5 @@
-#inserire per eseguirlo inserire da terminale: i runs, il base_path, il n. det e il n. du. 
-# ad esempio: python3 confronto_du.py --runs "699,705,707,709" --base_path "/home/mariarita/root" --detector 192 --du "D0DU107CT"
-
-
+#inserire per eseguirlo inserire da terminale: i runs, il base_path, il n. det, il n. du. e il range dell'asse x degli istogrammi  
+# ad esempio: python3 confronto_du.py --runs "699,705,707,709" --base_path "/home/mariarita/root" --detector 192 --du "D0DU107CT" --xrange "650,690"
 
 from ROOT import TFile, TH1D, TF1, TCanvas, TGraphErrors, TMultiGraph, gStyle, gApplication
 import pandas as pd
@@ -67,7 +65,7 @@ def main(args):
     
 
 
-    
+
     data_for_excel = []
 
     
@@ -76,6 +74,10 @@ def main(args):
     
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+
+    
+    xrange = list(map(float, args.xrange.split(',')))  # Converte il range in una lista di float
+    x_min, x_max = xrange[0], xrange[1]
 
     
     for ii, run_number in enumerate(run_numbers):
@@ -144,7 +146,7 @@ def main(args):
         
         canvas_07 = TCanvas(f"canvas_07_{run_number}", f"Run {run_number} PMT07", 1200, 800)
         canvas_07.Divide(6, 3) 
-        
+       
         canvas_07.cd()
         for i, hist_pmt07 in enumerate(histograms_07):
             canvas_07.cd(i + 1)  
@@ -152,7 +154,7 @@ def main(args):
             hist_pmt07.SetLineWidth(2)
             hist_pmt07.SetTitle(f"DOM {i} - PMT07")  
             hist_pmt07.Draw("HIST")  
-            hist_pmt07.GetXaxis().SetRangeUser(650,690)
+            hist_pmt07.GetXaxis().SetRangeUser(x_min, x_max)
         
         canvas_07.SaveAs(f"{output_dir}/run_{run_number}_{args.detector}_PMT07_canvas.png")
         
@@ -167,12 +169,11 @@ def main(args):
             hist_pmt15.SetLineWidth(2)
             hist_pmt15.SetTitle(f"DOM {i} - PMT15") 
             hist_pmt15.Draw("HIST")  
-            hist_pmt15.GetXaxis().SetRangeUser(650,690)
+            hist_pmt15.GetXaxis().SetRangeUser(x_min, x_max)
 
         
         canvas_15.SaveAs(f"{output_dir}/run_{run_number}_{args.detector}_PMT15_canvas.png")
         print(f"Grafici salvati per Run {run_number} in {output_dir}.")
-
         
         file_07.Close()
         file_15.Close()
@@ -181,13 +182,13 @@ def main(args):
     df.to_excel(f'{output_dir}/combined_{args.detector}_PMT07_PMT15.xlsx', index=False)
     print(f"Dati salvati in {output_dir}/combined_{args.detector}_PMT07_PMT15.xlsx")
 
-# aggiungi i parametri da terminale
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Genera grafici per PMT07 e PMT15 da file ROOT.")
     parser.add_argument('--runs', type=str, required=True, help="Numeri di run separati da virgola (es. 699,705,707,709)")
     parser.add_argument('--base_path', type=str, required=True, help="Percorso base dei file ROOT")
     parser.add_argument('--detector', type=int, required=True, help="Numero del detector (es. 192)")
     parser.add_argument('--du', type=str, required=True, help="Nome del DU (es. D0DU107CT)")
-    
+    parser.add_argument('--xrange', type=str, required=True, help="Range dell'asse X per gli istogrammi, formato: min,max (es. 650,690)")
+
     args = parser.parse_args()
     main(args)
