@@ -95,6 +95,7 @@ def main(args):
         graph_07.SetMarkerStyle(22)
         graph_07.SetMarkerColor(4)
         graph_07.SetMarkerSize(1.5)
+        graph_07.GetYaxis().SetRangeUser(x_min, x_max)
 
         n_points_15 = len(dom_indices_15)
         graph_15 = TGraphErrors(n_points_15)
@@ -104,6 +105,7 @@ def main(args):
         graph_15.SetMarkerStyle(21)
         graph_15.SetMarkerColor(2)
         graph_15.SetMarkerSize(1.5)
+        graph_15.GetYaxis().SetRangeUser(x_min, x_max)
         
         graph_07.SetTitle(f"Run {run_number} {args.detector} PMT07")
         graph_15.SetTitle(f"Run {run_number} {args.detector} PMT15")
@@ -114,6 +116,8 @@ def main(args):
         multigraph.Add(graph_15, "P")
         
         multigraph.SetTitle(f"Run {run_number}_DU107; DOM; laser hit time [ns]")
+        #multigraph.GetYaxis().SetRangeUser(650,680)
+
         multigraph.Draw("A")
         
         legend = canvas.BuildLegend(0.7, 0.7, 0.9, 0.9)
@@ -131,7 +135,7 @@ def main(args):
             canvas_07.cd(i + 1)  
             hist_pmt07.SetLineColor(1)  
             hist_pmt07.SetLineWidth(2)
-            hist_pmt07.SetTitle(f"DOM {i} - PMT07")  
+            hist_pmt07.SetTitle(f"DOM {i} - PMT07; laser hit times [ns]")  
             hist_pmt07.Draw("HIST")  
             hist_pmt07.GetXaxis().SetRangeUser(x_min, x_max)
         
@@ -145,7 +149,7 @@ def main(args):
             canvas_15.cd(i + 1) 
             hist_pmt15.SetLineColor(1)  
             hist_pmt15.SetLineWidth(2)
-            hist_pmt15.SetTitle(f"DOM {i} - PMT15") 
+            hist_pmt15.SetTitle(f"DOM {i} - PMT15; laser hit times [ns]") 
             hist_pmt15.Draw("HIST")  
             hist_pmt15.GetXaxis().SetRangeUser(x_min, x_max)
 
@@ -169,3 +173,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     main(args)
+
+
